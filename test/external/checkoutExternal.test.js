@@ -1,0 +1,32 @@
+const request = require('supertest');
+const { expect } = require('chai');
+const jwt = require('jsonwebtoken');
+
+
+// Gera o token dinamicamente
+const payload = { id: 1, name: 'Alice', email: 'alice@email.com', password: '123456' }; // dados do usuário
+const secret = 'supersecret'; // deve ser a mesma usada na sua aplicação
+const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+
+describe('Checkout', () => {
+    describe('POST /checkout', () => {
+       it('Quando o token é inválido, retorna 401', async () => {
+          const resposta = await request('http://localhost:3000')
+               .post('/api/checkout')
+               .set('Authorization', 'Bearer token_invalido') // simula envio de token inválido
+               .send({
+                   items: [{ productId: 1, quantity: 2 }],
+                   freight: 10, 
+                     paymentMethod: 'credit_card',
+                     cardData: { number: '1234-5678-9012-3456', expiry: '12/25', cvv: '123' },
+                });
+
+            expect(resposta.status).to.equal(401);      
+            expect(resposta.body).to.deep.equal({ error: 'Token inválido'});
+         });
+
+  });
+  });
+
+
+
