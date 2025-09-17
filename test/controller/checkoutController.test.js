@@ -54,12 +54,16 @@ it('Quando o checkout é realizado com sucesso, retorna 200', async () => {
                 cardData: { number: '1234-5678-9012-3456', expiry: '12/25', cvv: '123' },
             });
 
-        expect(resposta.status).to.equal(200);  
-        expect(resposta.body).to.have.property('valorFinal');       
+        // Validação com um Fixture
+        const respostaEsperada = require('../fixture/respostas/QuandoCheckoutRealizadoComSucesso.json');
+            
+        expect(resposta.status).to.equal(200);      
+        expect(resposta.body).to.deep.equal(respostaEsperada);
+       /* expect(resposta.body).to.have.property('valorFinal');       
         expect(resposta.body).to.have.property('items');
         expect(resposta.body).to.have.property('freight');
         expect(resposta.body).to.have.property('paymentMethod');
-        expect(resposta.body).to.have.property('total');       
+        expect(resposta.body).to.have.property('total'); */      
        
     });
 
@@ -83,7 +87,7 @@ it('Quando o checkout é realizado com sucesso, retorna 200', async () => {
     });
 
     it('Usando Mocks: Quando o checkout é realizado com sucesso, retorna 200', async () => {
-        const checkoutMock = sinon.stub(checkoutService, 'checkout').returns({
+         const checkoutMock = sinon.stub(checkoutService, 'checkout').returns({
             userId: 1,
             items: [{ productId: 1, quantity: 2 }],     
             freight: 10,
@@ -102,11 +106,17 @@ it('Quando o checkout é realizado com sucesso, retorna 200', async () => {
             });
 
         expect(resposta.status).to.equal(200);  
-        expect(resposta.body).to.have.property('valorFinal');       
+       
+        // Validação com um Fixture
+        const respostaEsperada = require('../fixture/respostas/MockQuandoCheckoutRealizadoComSucesso.json');
+        
+        expect(resposta.body).to.deep.equal(respostaEsperada);
+       /* expect(resposta.body).to.have.property('valorFinal');       
         expect(resposta.body).to.have.property('items');
         expect(resposta.body).to.have.property('freight');
         expect(resposta.body).to.have.property('paymentMethod');
-        expect(resposta.body).to.have.property('total');       
+        expect(resposta.body).to.have.property('total');  */ 
+                
         checkoutMock.restore();
     });
     
