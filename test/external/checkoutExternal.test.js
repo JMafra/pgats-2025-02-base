@@ -3,11 +3,6 @@ const { expect } = require('chai');
 const jwt = require('jsonwebtoken');
 
 
-// Gera o token dinamicamente
-const payload = { id: 1, name: 'Alice', email: 'alice@email.com', password: '123456' }; // dados do usuário
-const secret = 'supersecret'; // deve ser a mesma usada na sua aplicação
-const token = jwt.sign(payload, secret, { expiresIn: '1h' });
-
 describe('Checkout', () => {
     describe('POST /checkout', () => {
        it('Quando o token é inválido, retorna 401', async () => {
@@ -26,6 +21,15 @@ describe('Checkout', () => {
          });
 
        it('Quando os dados do checkout são inválidos, retorna 400', async () => {
+        const respostaLogin = await request('http://localhost:3000')
+              .post('/api/users/login')
+              .send({
+                  email: 'alice@email.com',
+                  password: '123456'  
+              });
+
+        const token = respostaLogin.body.token;
+        
         const resposta = await request('http://localhost:3000')
             .post('/api/checkout')
             .set('Authorization', `Bearer ${token}`)
@@ -41,6 +45,15 @@ describe('Checkout', () => {
     });
 
 it('Quando o checkout é realizado com sucesso, retorna 200', async () => {
+       const respostaLogin = await request('http://localhost:3000')
+              .post('/api/users/login')
+              .send({
+                  email: 'alice@email.com',
+                  password: '123456'  
+              });
+
+        const token = respostaLogin.body.token;
+
         const resposta = await request('http://localhost:3000')
             .post('/api/checkout')
             .set('Authorization', `Bearer ${token}`)
