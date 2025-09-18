@@ -5,6 +5,17 @@ const jwt = require('jsonwebtoken');
 
 describe('Checkout', () => {
     describe('POST /checkout', () => {
+       
+        beforeEach( async () =>{
+            const respostaLogin = await request('http://localhost:3000')
+                 .post('/api/users/login')
+                 .send({
+                    email: 'alice@email.com',
+                    password: '123456'  
+                });        
+             token = respostaLogin.body.token;
+        })
+
        it('Quando o token é inválido, retorna 401', async () => {
           const resposta = await request('http://localhost:3000')
                .post('/api/checkout')
@@ -21,16 +32,7 @@ describe('Checkout', () => {
          });
 
        it('Quando os dados do checkout são inválidos, retorna 400', async () => {
-        const respostaLogin = await request('http://localhost:3000')
-              .post('/api/users/login')
-              .send({
-                  email: 'alice@email.com',
-                  password: '123456'  
-              });
-
-        const token = respostaLogin.body.token;
-        
-        const resposta = await request('http://localhost:3000')
+         const resposta = await request('http://localhost:3000')
             .post('/api/checkout')
             .set('Authorization', `Bearer ${token}`)
             .send({
@@ -45,15 +47,6 @@ describe('Checkout', () => {
     });
 
 it('Quando o checkout é realizado com sucesso, retorna 200', async () => {
-       const respostaLogin = await request('http://localhost:3000')
-              .post('/api/users/login')
-              .send({
-                  email: 'alice@email.com',
-                  password: '123456'  
-              });
-
-        const token = respostaLogin.body.token;
-
         const resposta = await request('http://localhost:3000')
             .post('/api/checkout')
             .set('Authorization', `Bearer ${token}`)
