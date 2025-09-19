@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/**/*.test.js --timeout 10000 --exit",
-    "test-external": "mocha test/external/**/*.test.js --timeout 10000 --exit",
-    "test-controller": "mocha test/controller/**/*.test.js --timeout 10000 --exit",
+    "test": "mocha test/**/*.test.js --timeout 10000 --reporter mochawesome",
+    "test-external": "mocha test/external/**/*.test.js --timeout 10000 --reporter mochawesome",
+    "test-controller": "mocha test/controller/**/*.test.js --timeout 10000 --reporter mochawesome",
     "start": "node ./rest/server.js"
   },
   "repository": {
@@ -31,5 +31,8 @@
     "sinon": "^21.0.0",
     "supertest": "^7.1.4",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "mochawesome": "^7.1.4"
   }
 }
