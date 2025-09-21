@@ -3,8 +3,9 @@ const {expect}  = require('chai')
 
 
 describe('Checkout GraphQL', ()=>{
-    it('GraphQL: Quando o checkout é realizado com sucesso, retorna 200', async ()=>{
-       const resposta = await request('http://localhost:4000')
+
+   beforeEach(async ()=>{
+     const resposta = await request('http://localhost:4000')
              .post('/graphql')
              .send({
                 query: `
@@ -17,11 +18,16 @@ describe('Checkout GraphQL', ()=>{
                     email: 'alice@email.com',
                     password: '123456'
                 }
-             });     
+             });  
+        token =  resposta.body.data.login.token;  
+
+   })
+   
+    it('GraphQL: Quando o checkout é realizado com sucesso, retorna 200', async ()=>{     
 
       const respostaCheckout  = await request('http://localhost:4000')
            .post('/graphql')
-           .set('Authorization', `Bearer ${resposta.body.data.login.token}` )
+           .set('Authorization', `Bearer ${token}` )
            .send({
                query: ` 
                  mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!) {
@@ -42,5 +48,31 @@ describe('Checkout GraphQL', ()=>{
            });
 
            expect(respostaCheckout.status).to.equal(200)
+    });
+
+     it('GraphQL: Quando os dados do checkout são inválidos, retorna 400', async ()=>{     
+
+      const respostaCheckout  = await request('http://localhost:4000')
+           .post('/graphql')
+           .set('Authorization', `Bearer ${token}` )
+           .send({
+               query: ` 
+                 mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!) {
+                checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod) {
+                    freight
+                    items {
+                    quantity
+                    productId
+                    }
+                 }
+                }
+               `,
+               variables: {                
+                  freight: 10,
+                  paymentMethod: 'boleto'
+               }
+           });
+
+           expect(respostaCheckout.status).to.equal(400)
     });
 });

@@ -25,11 +25,14 @@ jobs:
     - name: Run tests
       run: npm run test-controller
 
-    - name: Start API
-      run: npm start &
+    - name: Start API Rest
+      run: npm run start-rest &
 
-    - name: Wait API start
-      run: sleep 5
+    - name: Start API GraphQL
+      run: npm run start-graphql &
 
-    - name: Run external tests
+    - name: Wait APIs start
+      run: sleep 8
+
+    - name: Run external tests API Rest and GraphQL
       run: npm run test-external
