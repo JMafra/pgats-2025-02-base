@@ -7,7 +7,8 @@
     "test": "mocha test/**/*.test.js --timeout 10000 --reporter mochawesome",
     "test-external": "mocha test/external/**/*.test.js --timeout 10000 --reporter mochawesome",
     "test-controller": "mocha test/controller/**/*.test.js --timeout 10000 --reporter mochawesome",
-    "start": "node ./rest/server.js"
+    "start": "node ./rest/server.js",
+    "start-graphql": "node ./graphql/server.js"
   },
   "repository": {
     "type": "git",

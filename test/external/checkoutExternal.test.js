@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const jwt = require('jsonwebtoken');
 
 
-describe('Checkout', () => {
+describe('Checkout Rest', () => {
     describe('POST /checkout', () => {
        
         beforeEach( async () =>{
